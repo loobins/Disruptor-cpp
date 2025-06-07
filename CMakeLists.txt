@@ -7,7 +7,7 @@ set(DISRUPTOR_VERSION_PATCH "0")
 set(DISRUPTOR_VERSION "${DISRUPTOR_VERSION_MAJOR}.${DISRUPTOR_VERSION_MINOR}.${DISRUPTOR_VERSION_PATCH}")
 
 enable_testing()
-find_package(Boost REQUIRED)
+
 # enable gcc specific stuff
 if(CMAKE_COMPILER_IS_GNUCXX)
     set(COMPILER_FLAGS "-std=c++20")
