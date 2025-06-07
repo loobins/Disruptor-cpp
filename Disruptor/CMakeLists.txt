@@ -1,11 +1,7 @@
 project(Disruptor)
-cmake_minimum_required(VERSION 2.6)
+cmake_minimum_required(VERSION 3.2)
 
-find_package(Boost COMPONENTS system thread chrono)
-if(Boost_FOUND)
-    include_directories(${Boost_INCLUDE_DIRS})
-    link_directories(${Boost_LIBRARY_DIRS})
-endif()
+
 
 include_directories("..")
 
@@ -115,8 +111,16 @@ set(Disruptor_headers
     YieldingWaitStrategy.h
 )
 
+
+
 add_library(DisruptorShared SHARED ${Disruptor_sources})
-target_link_libraries(DisruptorShared ${Boost_LIBRARIES})
+if(MSVC)
+    message("TARGET_NAME=${TARGET_NAME} ")
+    target_compile_options(DisruptorShared PUBLIC  "/Zc:__cplusplus")
+endif()
+
+
+set(CMAKE_CXX_STANDARD 20)
 set_target_properties(DisruptorShared PROPERTIES OUTPUT_NAME Disruptor)
 set_target_properties(DisruptorShared PROPERTIES VERSION ${DISRUPTOR_VERSION})
 set_target_properties(DisruptorShared PROPERTIES SOVERSION ${DISRUPTOR_VERSION_MAJOR})

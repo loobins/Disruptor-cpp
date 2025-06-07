@@ -50,7 +50,7 @@ namespace std
 {
 
     template <>
-    struct hash< Disruptor::TypeInfo > : public unary_function< Disruptor::TypeInfo, size_t >
+    struct hash< Disruptor::TypeInfo > //: public unary_function< Disruptor::TypeInfo, size_t >
     {
     public:
         size_t operator()(const Disruptor::TypeInfo& value) const

@@ -1,11 +1,11 @@
 #include "stdafx.h"
 #include "RoundRobinThreadAffinedTaskScheduler.h"
 
-#include <boost/date_time.hpp>
+//#include <boost/date_time.hpp>
 
 #include "ArgumentOutOfRangeException.h"
 #include "ThreadHelper.h"
-
+#include <future>
 
 namespace Disruptor
 {
@@ -29,11 +29,19 @@ namespace Disruptor
             return;
 
         m_started = false;
-
+        
         for (auto&& thread : m_threads)
         {
-            if (thread.joinable())
-                thread.timed_join(boost::posix_time::seconds(10));
+            
+            if (thread.joinable()) // 
+            {
+                auto future = std::async(std::launch::async, &std::thread::join, &thread);
+                if (future.wait_for(std::chrono::seconds(10))  //wait 10s 
+                    == std::future_status::timeout) {
+
+
+                }
+            }
         }
     }
 

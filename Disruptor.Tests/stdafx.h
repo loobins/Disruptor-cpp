@@ -24,7 +24,7 @@
 // Boost.Test
 
 #include "Disruptor/Pragmas.h"
-
+#include <initializer_list>
 DISRUPTOR_PRAGMA_PUSH
 DISRUPTOR_PRAGMA_IGNORE_ALL
 DISRUPTOR_PRAGMA_IGNORE_UNUSED_VARIABLES

@@ -21,7 +21,7 @@
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -44,6 +44,7 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>..\bin\$(Configuration)_$(Platform)_$(PlatformToolset)\$(ProjectName)\</OutDir>
     <IntDir>..\obj\$(Configuration)_$(Platform)_$(PlatformToolset)\$(ProjectName)\</IntDir>
+    <LibraryPath>C:\boost_1_83_0\lib64-msvc-14.3;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>

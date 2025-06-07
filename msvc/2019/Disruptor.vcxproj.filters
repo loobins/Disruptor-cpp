@@ -206,6 +206,7 @@
     <ClCompile Include="../../Disruptor/ThreadHelper_Windows.cpp">
       <Filter>Util</Filter>
     </ClCompile>
+    <ClCompile Include="Program.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="../../Disruptor/CMakeLists.txt" />

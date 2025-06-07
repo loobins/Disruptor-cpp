@@ -1,5 +1,5 @@
 project(Disruptor)
-cmake_minimum_required(VERSION 2.6)
+cmake_minimum_required(VERSION 3.2)
 
 set(DISRUPTOR_VERSION_MAJOR "1")
 set(DISRUPTOR_VERSION_MINOR "0")
@@ -7,10 +7,10 @@ set(DISRUPTOR_VERSION_PATCH "0")
 set(DISRUPTOR_VERSION "${DISRUPTOR_VERSION_MAJOR}.${DISRUPTOR_VERSION_MINOR}.${DISRUPTOR_VERSION_PATCH}")
 
 enable_testing()
-
+find_package(Boost REQUIRED)
 # enable gcc specific stuff
 if(CMAKE_COMPILER_IS_GNUCXX)
-    set(COMPILER_FLAGS "-std=c++14")
+    set(COMPILER_FLAGS "-std=c++20")
     set(WARNING_FLAGS "-W -Wall")
     
     if(CMAKE_BUILD_TYPE STREQUAL "debug")
@@ -42,7 +42,9 @@ elseif (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 endif()
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${COMPILER_FLAGS} ${WARNING_FLAGS}")
-
+if(Boost_FOUND)
+    include_directories(${Boost_INCLUDE_DIRS})
+endif()
 add_subdirectory(Disruptor)
 
 if(DISRUPTOR_BUILD_TESTS)
@@ -90,4 +92,3 @@ set(CPACK_SOURCE_IGNORE_FILES
 
 include(CPack)
 add_custom_target(distr COMMAND ${CMAKE_MAKE_PROGRAM} package_source)
-

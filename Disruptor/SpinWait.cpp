@@ -58,7 +58,7 @@ namespace Disruptor
             spinWaitInternal(4 << m_count);
         }
 
-        if (m_count == std::numeric_limits< std::int32_t >::max())
+        if (m_count == ((std::numeric_limits< std::int32_t >::max)()))
             m_count = YIELD_THRESHOLD;
         else 
             ++m_count;

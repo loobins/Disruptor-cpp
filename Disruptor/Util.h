@@ -1,5 +1,6 @@
 #pragma once
 
+#define NOMINMAX
 #include <cstdint>
 #include <limits>
 #include <memory>
@@ -49,7 +50,7 @@ namespace Util
      * \param minimum an initial default minimum.  If the array is empty this value will returned.
      * \returns the minimum sequence found or lon.MaxValue if the array is empty.
      */ 
-    std::int64_t getMinimumSequence(const std::vector< std::shared_ptr< ISequence > >& sequences, std::int64_t minimum = std::numeric_limits< std::int64_t >::max());
+    std::int64_t getMinimumSequence(const std::vector< std::shared_ptr< ISequence > >& sequences, std::int64_t minimum =( (std::numeric_limits< std::int64_t >::max)()));
 
     /**
      * Get an array of Sequences for the passed IEventProcessors
