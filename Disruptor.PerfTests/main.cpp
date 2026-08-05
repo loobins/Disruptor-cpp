@@ -1,12 +1,31 @@
 #include "stdafx.h"
 
-#include <boost/algorithm/string.hpp>
+#include <algorithm>
+#include <cctype>
+#include <string>
 
 #include "LatencyTestSession.h"
 #include "TestRepository.h"
 #include "ThroughputTestSession.h"
 
 using namespace Disruptor::PerfTests;
+
+namespace
+{
+    void trim(std::string& value)
+    {
+        const auto notSpace = [](unsigned char c) { return !std::isspace(c); };
+        value.erase(value.begin(), std::find_if(value.begin(), value.end(), notSpace));
+        value.erase(std::find_if(value.rbegin(), value.rend(), notSpace).base(), value.end());
+    }
+
+    bool iequals(const std::string& lhs, const std::string& rhs)
+    {
+        return lhs.size() == rhs.size()
+            && std::equal(lhs.begin(), lhs.end(), rhs.begin(),
+                          [](unsigned char a, unsigned char b) { return std::tolower(a) == std::tolower(b); });
+    }
+}
 
 void runAllTests(const TestRepository& testRepository);
 void runOneTest(const TestRepository& testRepository, const std::string& testName);
@@ -21,9 +40,9 @@ int main(int, char**)
 
     std::getline(std::cin, testName);
 
-    boost::algorithm::trim(testName);
+    trim(testName);
 
-    if (boost::algorithm::iequals(testName, "ALL") || testName.empty())
+    if (iequals(testName, "ALL") || testName.empty())
     {
         runAllTests(testRepository);
     }

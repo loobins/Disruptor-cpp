@@ -1,8 +1,6 @@
 #include "stdafx.h"
 #include "RoundRobinThreadAffinedTaskScheduler.h"
 
-#include <boost/date_time.hpp>
-
 #include "ArgumentOutOfRangeException.h"
 #include "ThreadHelper.h"
 
@@ -23,18 +21,38 @@ namespace Disruptor
         createThreads(numberOfThreads);
     }
 
+    RoundRobinThreadAffinedTaskScheduler::~RoundRobinThreadAffinedTaskScheduler()
+    {
+        // std::thread calls std::terminate if destroyed while joinable, so the pool
+        // must always be cleaned up (boost::thread previously detached on destruction).
+        stop();
+    }
+
     void RoundRobinThreadAffinedTaskScheduler::stop()
     {
-        if (!m_started)
-            return;
-
         m_started = false;
 
         for (auto&& thread : m_threads)
         {
-            if (thread.joinable())
-                thread.timed_join(boost::posix_time::seconds(10));
+            if (!thread.joinable())
+                continue;
+
+            // std::thread has no timed join. Run the join on a helper thread and wait on
+            // it with a timeout; if the worker task is still blocked (e.g. the consumers
+            // were never halted), abandon it rather than block forever. This mirrors the
+            // original boost::thread::timed_join safety net.
+            auto worker = std::make_shared< std::thread >(std::move(thread));
+            std::packaged_task< void() > joinTask([worker] { worker->join(); });
+            auto joined = joinTask.get_future();
+            std::thread joiner(std::move(joinTask));
+
+            if (joined.wait_for(std::chrono::seconds(2)) == std::future_status::timeout)
+                joiner.detach();
+            else
+                joiner.join();
         }
+
+        m_threads.clear();
     }
 
     std::future< void > RoundRobinThreadAffinedTaskScheduler::scheduleAndStart(std::packaged_task< void() >&& task)

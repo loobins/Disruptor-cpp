@@ -10,9 +10,8 @@
 using namespace Disruptor;
 
 
-BOOST_AUTO_TEST_SUITE(TimeoutBlockingWaitStrategyTest)
 
-BOOST_AUTO_TEST_CASE(ShouldTimeoutWaitFor)
+TEST(TimeoutBlockingWaitStrategyTest, ShouldTimeoutWaitFor)
 {
     auto sequenceBarrierMock = std::make_shared< testing::NiceMock< Tests::SequenceBarrierMock > >();
 
@@ -38,7 +37,6 @@ BOOST_AUTO_TEST_CASE(ShouldTimeoutWaitFor)
 
     auto timeWaiting = t1 - t0;
 
-    BOOST_CHECK(timeWaiting >= theTimeout);
+    EXPECT_TRUE(timeWaiting >= theTimeout);
 }
 
-BOOST_AUTO_TEST_SUITE_END()

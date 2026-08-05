@@ -1,12 +1,8 @@
 project(Disruptor)
 cmake_minimum_required(VERSION 2.6)
 
-if (WITH_CONAN)
-  set(Boost_Libraries CONAN_PKG::boost)
-else()
-  find_package(Boost COMPONENTS system thread chrono REQUIRED)
-  set(Boost_Libraries Boost::boost Boost::system Boost::thread Boost::chrono)
-endif()
+set(THREADS_PREFER_PTHREAD_FLAG ON)
+find_package(Threads REQUIRED)
 
 set(Disruptor_sources
 
@@ -129,7 +125,7 @@ function(configure_disruptor_target DISRUPTOR_TARGET)
     PRIVATE
       ${CMAKE_CURRENT_SOURCE_DIR}
   )
-  target_link_libraries(${DISRUPTOR_TARGET} PUBLIC ${Boost_Libraries})
+  target_link_libraries(${DISRUPTOR_TARGET} PUBLIC Threads::Threads)
 endfunction()
 
 

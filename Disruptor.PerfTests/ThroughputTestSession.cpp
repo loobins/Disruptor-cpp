@@ -4,7 +4,6 @@
 #include <numeric>
 #include <sstream>
 
-#include <boost/filesystem.hpp>
 
 #include "Disruptor.TestTools/Stopwatch.h"
 

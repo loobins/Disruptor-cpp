@@ -1,7 +1,19 @@
 #include "stdafx.h"
 #include "TestRepository.h"
 
-#include <boost/algorithm/string.hpp>
+#include <algorithm>
+#include <cctype>
+#include <string>
+
+namespace
+{
+    std::string toLowerCopy(std::string value)
+    {
+        std::transform(value.begin(), value.end(), value.begin(),
+                       [](unsigned char c) { return static_cast< char >(std::tolower(c)); });
+        return value;
+    }
+}
 
 // Raw
 #include "OneToOneRawBatchThroughputTest.h"
@@ -66,16 +78,16 @@ namespace PerfTests
     {
         ThroughputTestInfo info{ typeInfo.name(), testFactory };
 
-        m_throughputTestInfosByName.insert(std::make_pair(boost::algorithm::to_lower_copy(typeInfo.fullyQualifiedName()), info));
-        m_throughputTestInfosByName.insert(std::make_pair(boost::algorithm::to_lower_copy(typeInfo.name()), info));
+        m_throughputTestInfosByName.insert(std::make_pair(toLowerCopy(typeInfo.fullyQualifiedName()), info));
+        m_throughputTestInfosByName.insert(std::make_pair(toLowerCopy(typeInfo.name()), info));
     }
 
     void TestRepository::registerTest(const TypeInfo& typeInfo, const std::function<std::shared_ptr< ILatencyTest >()>& testFactory)
     {
         LatencyTestInfo info{ typeInfo.name(), testFactory };
 
-        m_latencyTestInfosByName.insert(std::make_pair(boost::algorithm::to_lower_copy(typeInfo.fullyQualifiedName()), info));
-        m_latencyTestInfosByName.insert(std::make_pair(boost::algorithm::to_lower_copy(typeInfo.name()), info));
+        m_latencyTestInfosByName.insert(std::make_pair(toLowerCopy(typeInfo.fullyQualifiedName()), info));
+        m_latencyTestInfosByName.insert(std::make_pair(toLowerCopy(typeInfo.name()), info));
     }
 
     const TestRepository& TestRepository::instance()
@@ -102,7 +114,7 @@ namespace PerfTests
 
     bool TestRepository::tryGetThroughputTest(const std::string& testName, ThroughputTestInfo& testInfo) const
     {
-        auto it = m_throughputTestInfosByName.find(boost::algorithm::to_lower_copy(testName));
+        auto it = m_throughputTestInfosByName.find(toLowerCopy(testName));
         if (it == m_throughputTestInfosByName.end())
             return false;
 
@@ -128,7 +140,7 @@ namespace PerfTests
 
     bool TestRepository::tryGetLatencyTest(const std::string& testName, LatencyTestInfo& testInfo) const
     {
-        auto it = m_latencyTestInfosByName.find(boost::algorithm::to_lower_copy(testName));
+        auto it = m_latencyTestInfosByName.find(toLowerCopy(testName));
         if (it == m_latencyTestInfosByName.end())
             return false;
 

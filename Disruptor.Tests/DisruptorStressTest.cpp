@@ -11,7 +11,6 @@ using namespace Disruptor;
 using namespace ::Disruptor::Tests;
 
 
-BOOST_AUTO_TEST_SUITE(DisruptorStressTest)
 
 struct MyTestEvent
 {
@@ -117,7 +116,7 @@ std::vector< std::shared_ptr< TestEventHandler > > initialize(const std::shared_
     return result;
 }
 
-BOOST_AUTO_TEST_CASE(ShouldHandleLotsOfThreads)
+TEST(DisruptorStressTest, ShouldHandleLotsOfThreads)
 {
     auto processorsCount = std::thread::hardware_concurrency();
     processorsCount = std::max(processorsCount / 2, 1u);
@@ -163,16 +162,15 @@ BOOST_AUTO_TEST_CASE(ShouldHandleLotsOfThreads)
 
     for (auto&& publisher : publishers)
     {
-        BOOST_CHECK_EQUAL(publisher->failed, false);
+        EXPECT_EQ(publisher->failed, false);
     }
 
     for (auto&& handler : handlers)
     {
-        BOOST_CHECK_NE(handler->messagesSeen, 0);
-        BOOST_CHECK_EQUAL(handler->failureCount, 0);
+        EXPECT_NE(handler->messagesSeen, 0);
+        EXPECT_EQ(handler->failureCount, 0);
     }
 
     scheduler->stop();
 }
 
-BOOST_AUTO_TEST_SUITE_END()

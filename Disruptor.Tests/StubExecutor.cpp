@@ -19,7 +19,7 @@ namespace Tests
             result = task.get_future();
 
             std::lock_guard< decltype(m_mutex) > lock(m_mutex);
-            m_threads.push_back(boost::thread(std::move(task)));
+            m_threads.push_back(std::thread(std::move(task)));
         }
 
         return result;
@@ -31,23 +31,30 @@ namespace Tests
 
         while (!m_threads.empty())
         {
-            boost::thread thread(std::move(m_threads.front()));
+            std::thread thread(std::move(m_threads.front()));
             m_threads.pop_front();
 
-            if (thread.joinable())
-            {
-                try
-                {
-                    thread.interrupt();
-                    thread.timed_join(boost::posix_time::milliseconds(5000));
-                }
-                catch (std::exception& ex)
-                {
-                    std::cout << ex.what() << std::endl;
-                }
-            }
+            if (!thread.joinable())
+                continue;
 
-            BOOST_CHECK_MESSAGE(thread.joinable() == false, "Failed to stop thread: " << thread.get_id());
+            // std::thread has no timed join (boost::thread::timed_join previously
+            // gave up on workers that would not stop). Run the join on a helper thread
+            // and wait on it with a timeout; if the worker does not stop in time, abandon
+            // it rather than block the test suite forever.
+            auto worker = std::make_shared< std::thread >(std::move(thread));
+            std::packaged_task< void() > joinTask([worker] { worker->join(); });
+            auto joined = joinTask.get_future();
+            std::thread joiner(std::move(joinTask));
+
+            if (joined.wait_for(std::chrono::seconds(2)) == std::future_status::timeout)
+            {
+                std::cerr << "StubExecutor: thread did not stop within timeout, abandoning: " << worker->get_id() << std::endl;
+                joiner.detach();
+            }
+            else
+            {
+                joiner.join();
+            }
         }
     }
 

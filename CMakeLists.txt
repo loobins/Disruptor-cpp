@@ -26,7 +26,7 @@ endif()
 
 # enable gcc specific stuff
 if(CMAKE_COMPILER_IS_GNUCXX)
-    set(COMPILER_FLAGS "-std=c++14")
+    set(COMPILER_FLAGS "-std=c++20")
     set(WARNING_FLAGS "-W -Wall")
     
     if(CMAKE_BUILD_TYPE STREQUAL "debug")
@@ -41,7 +41,7 @@ if(CMAKE_COMPILER_IS_GNUCXX)
     endif(CMAKE_SYSTEM_PROCESSOR MATCHES "x86_64")
 
 elseif (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-    set(COMPILER_FLAGS "-std=c++14")
+    set(COMPILER_FLAGS "-std=c++20")
     set(WARNING_FLAGS "-W -Wall")
     
     if(CMAKE_BUILD_TYPE STREQUAL "debug")

@@ -17,7 +17,7 @@ namespace Disruptor
     {
         if (cursor.value() < sequence)
         {
-            boost::unique_lock< decltype(m_gate) > uniqueLock(m_gate);
+            std::unique_lock< decltype(m_gate) > uniqueLock(m_gate);
 
             do
             {
@@ -46,7 +46,7 @@ namespace Disruptor
     {
         if (m_signalNeeded.exchange(false))
         {
-            boost::unique_lock< decltype(m_gate) > uniqueLock(m_gate);
+            std::unique_lock< decltype(m_gate) > uniqueLock(m_gate);
 
             m_conditionVariable.notify_all();
         }

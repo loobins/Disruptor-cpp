@@ -57,9 +57,8 @@ using namespace Disruptor;
 using namespace Disruptor::Tests;
 
 
-BOOST_AUTO_TEST_SUITE(WorkerPoolTests)
 
-BOOST_AUTO_TEST_CASE(ShouldProcessEachMessageByOnlyOneWorker)
+TEST(WorkerPoolTests, ShouldProcessEachMessageByOnlyOneWorker)
 {
     auto taskScheduler = std::make_shared< RoundRobinThreadAffinedTaskScheduler >();
     taskScheduler->start(2);
@@ -80,11 +79,11 @@ BOOST_AUTO_TEST_CASE(ShouldProcessEachMessageByOnlyOneWorker)
 
     std::this_thread::sleep_for(std::chrono::milliseconds(500));
 
-    BOOST_CHECK_EQUAL((*ringBuffer)[0].value(), 1L);
-    BOOST_CHECK_EQUAL((*ringBuffer)[1].value(), 1L);
+    EXPECT_EQ((*ringBuffer)[0].value(), 1L);
+    EXPECT_EQ((*ringBuffer)[1].value(), 1L);
 }
 
-BOOST_AUTO_TEST_CASE(ShouldProcessOnlyOnceItHasBeenPublished)
+TEST(WorkerPoolTests, ShouldProcessOnlyOnceItHasBeenPublished)
 {
     auto taskScheduler = std::make_shared< RoundRobinThreadAffinedTaskScheduler >();
     taskScheduler->start(2);
@@ -103,8 +102,7 @@ BOOST_AUTO_TEST_CASE(ShouldProcessOnlyOnceItHasBeenPublished)
 
     std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 
-    BOOST_CHECK_EQUAL((*ringBuffer)[0].value(), 0L);
-    BOOST_CHECK_EQUAL((*ringBuffer)[1].value(), 0L);
+    EXPECT_EQ((*ringBuffer)[0].value(), 0L);
+    EXPECT_EQ((*ringBuffer)[1].value(), 0L);
 }
 
-BOOST_AUTO_TEST_SUITE_END()

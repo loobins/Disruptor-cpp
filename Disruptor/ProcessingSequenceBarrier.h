@@ -55,7 +55,7 @@ namespace Disruptor
         Sequence& m_cursorSequenceRef;
         IHighestPublishedSequenceProvider& m_sequenceProviderRef;
 
-        bool m_alerted;
+        std::atomic< bool > m_alerted;  // 关停 alert 标志：跨线程(halt 写 / 处理线程读)，须原子(对齐 LMAX volatile)
     };
 
 } // namespace Disruptor

@@ -6,6 +6,7 @@
 
 #include "ArgumentNullException.h"
 #include "BlockingWaitStrategy.h"
+#include "ISequence.h"
 #include "LiteBlockingWaitStrategy.h"
 #include "SleepingWaitStrategy.h"
 

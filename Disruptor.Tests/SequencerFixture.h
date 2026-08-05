@@ -1,5 +1,7 @@
 #pragma once
 
+#include <gtest/gtest.h>
+
 #include "Disruptor/BlockingWaitStrategy.h"
 #include "Disruptor/MultiProducerSequencer.h"
 #include "Disruptor/Sequence.h"
@@ -12,7 +14,7 @@ namespace Tests
 {
 
     template <class T>
-    struct SequencerTestFixture
+    struct SequencerTestFixture : public ::testing::Test
     {
         SequencerTestFixture()
             : m_waitStrategy(std::make_shared< BlockingWaitStrategy >())

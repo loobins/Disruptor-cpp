@@ -1,15 +1,12 @@
 project(Disruptor.Tests)
 cmake_minimum_required(VERSION 2.6)
 
-include (BoostTest)
+include(GoogleTest)
 
 if (WITH_CONAN)
   set(GMock_LIBRARY CONAN_PKG::gtest)
-  set(Boost_Libraries CONAN_PKG::boost)
 else()
   set(GMock_LIBRARY gtest gmock)
-  find_package(Boost COMPONENTS unit_test_framework REQUIRED)
-  set(Boost_Libraries Boost::unit_test_framwork)
 endif()
 
 set(DisruptorTests_sources
@@ -64,11 +61,10 @@ set(DisruptorTests_sources
 )
 
 add_executable(Disruptor.Tests ${DisruptorTests_sources})
-boost_test_discover_tests(Disruptor.Tests)
+gtest_discover_tests(Disruptor.Tests)
 
 target_link_libraries(Disruptor.Tests
   PRIVATE
     Disruptor.TestTools
     ${GMock_LIBRARY}
-    ${Boost_LIBRARIES}
 )
